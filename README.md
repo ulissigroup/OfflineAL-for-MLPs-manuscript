@@ -1,1 +1,1 @@
-Physics Enabled Convergence of Offline Active Learning with Machine Learning Potentials
+### Enabling robust offline active learning for machine learning potentials using simplephysics-based priors
