@@ -22,8 +22,8 @@
 \usepackage{multirow}
 \newcommand{\ang}{\mbox{\normalfont\AA}}
 \newacronym{DFT}{DFT}{Density Functional Theory}
-\newacronym{onlineal}{\onlineal}{Online Active Learning}
-\newacronym{offlineal}{offlineal}{Offline Active Learning}
+\newacronym{onlineal}{Online-AL}{Online Active Learning}
+\newacronym{offlineal}{Offline-AL}{Offline Active Learning}
 
 \newacronym{mlp}{MLP}{Machine Learning Potential}
 \newacronym{QE}{QE}{Quantum Espresso}
@@ -50,37 +50,33 @@ Department of Chemical Engineering, Carnegie Mellon University, Pittsburgh, PA 1
 \setcounter{figure}{0}  
 \setcounter{equation}{0}  
 \subsection{Interactive examples}
-Several interactive Google Colab notebooks have been prepared to allow readers to conveniently explore the proposed methods. Accelerated structural relaxations and transition state calculations can be found at: \url{https://github.com/ulissigroup/Enabling-Robust-Offline-Active-Learning-for-MLPs}. Random query strategies are used to demonstrate the effectiveness of even the simplest of strategies. We encourage users to explore query and termination strategies that best suites their application of choice. DFT calculations are performed directly in the notebook examples via a GPU-enabled Quantum Espresso package.
+Several interactive Google Colab notebooks have been prepared to allow readers to conveniently explore the proposed methods. Accelerated structural relaxations and transition state calculations can be found at Ref \cite{examples}. Random query strategies are used to demonstrate the effectiveness of even the simplest of strategies. We encourage users to explore query and termination strategies that best suites their application of choice. DFT calculations are performed directly in the notebook examples via a GPU-enabled Quantum Espresso package.
 
 \subsection{Morse parameters fitting}
-AMP\textit{torch}, the code for this work, is available at Ref \cite{amptorch}. Additionally we provide interactive Google Colab \cite{examples} notebooks to allow users to easily explore alternative systems without the hassle of installation and dependency management. 
-
 The Morse potential was selected for our primarily bonded, catalytic systems. Parameters of the Morse potential, $D_e$, $r_e$, and $a$, corresponding to well depth, equilibrium distance, and well width were computed in the following manner for a given element, X:
 \begin{enumerate}
     \item Lone atomic energies, $E_X$, obtained through singlepoint DFT calculations;
-    \item Diatomic atoms relaxed to obtain a relaxed state energy, $E_{X_2}$, and equilbrium distance, $r_e$.
+    \item Diatomic atoms relaxed to obtain a relaxed state energy, $E_{X_2}$, and equilibrium distance, $r_e$.
     \item Well depth, $D_e$, is calculated as follows:
     \begin{equation}
         D_e = -(E_{X_2} - 2 * E_X)
     \end{equation}
-    \item Diatomic bond stretched and corresponding DFT points fit to morse potential functional form (\ref{morse}) to obtain $a$ Figure(\ref{fig:morsefit}).
+    \item Diatomic bond stretched and corresponding DFT points fit to Morse potential functional form (\ref{morse}) to obtain $a$ Figure (\ref{fig:morsefit}).
     \begin{equation}\label{morse}
     E_{morse} = D_e(e^{-2a(r-r_e)} - 2e^{-a(r-r_e)})
     \end{equation}
 \end{enumerate}
  
-To make use of the Morse potential for multi-element systems, linear mixing rules are utilized to compute element pair parameters. Adapted from Yang, et al.\cite{Yang2018} the Morse potential is rewritten and parameter combinations applied accordingly (
+To make use of the Morse potential for multi-element systems, linear mixing rules are utilized to compute element pair parameters. Adapted from Yang, et al.\cite{Yang2018} the Morse potential is rewritten and parameter combinations applied accordingly (\ref{newmorse}-\ref{mix3})
 \begin{equation}\label{newmorse}
     E_{morse} = D_e(\exp[{-\frac{2C}{\sigma}(r-r_e)}] - 2\exp[{-\frac{C}{\sigma}(r-r_e)})]
 \end{equation}
-
-\begin{flalign}\label{fig:mixing}
-    D_{AB} &= \sqrt{D_AD_B}\\
-    r_{e, AB} &= \frac{r_{e, A} + r_{e, B}}{2}\\
-    \sigma_{AB} &= \frac{\sigma_{A} + \sigma_{B}}{2}
+\begin{flalign}
+    D_{AB} &= \sqrt{D_AD_B} \label{mix1}\\ 
+    r_{e, AB} &= \frac{r_{e, A} + r_{e, B}}{2} \label{mix2}\\
+    \sigma_{AB} &= \frac{\sigma_{A} + \sigma_{B}}{2} \label{mix3}
 \end{flalign}
-
-Where $C = \ln{2}/(r_e - \sigma)$ and $\sigma$ corresponds to $E_{morse}(\sigma) = 0$. Although more sophisticate combination rules exist \cite{Yang2018}, the accuracy of our Morse potential is not crucial for the success of our framework as it is meant to provide some guidance to the model.
+Where $C = \ln{2}/(r_e - \sigma)$ and $\sigma$ corresponds to $E_{morse}(\sigma) = 0$. Although more sophisticate combination rules exist \cite{Yang2018}, the accuracy of our Morse potential is not crucial for the success of our framework as it is meant to provide some guidance to the model.\\
 
 \subsection{Convergence}
 
